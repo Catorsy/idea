@@ -1,5 +1,7 @@
 package com.company.homework.homework12;
 
+import com.company.lessons.lesson11.SimpleBox;
+
 import java.util.Arrays;
 
 public class Main {
@@ -17,10 +19,11 @@ public class Main {
         Arrays.fill(arr, 1); //отличный метод заполнить весь массив одними и теми же значениями
         System.out.println(arr[55555]); //проверим, что он сработал
         long a = System.currentTimeMillis(); //засечем время
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < SIZE; i++) {
             arr[i] = (float)(arr[i] * Math.sin(0.2f + i/5) * Math.cos(0.2f + i/5) * Math.cos(0.4f + i/2));
         }
         System.out.println(System.currentTimeMillis()-a + " - время работы первого метода"); //почему-то текст и метод нельзя поменять местами
+        System.out.println("Последний кусок: " + arr[SIZE-1]); //проверим, что все посчиталось и склеилось правильно
     }
 
     private static void way2() {
@@ -37,7 +40,7 @@ public class Main {
             public void run() {
                 System.out.println("Привет! Я Поток1, начинаю вычисления.");
                 for (int i = 0; i < arrBegin.length; i++) {
-                    arrBegin[i] = (float)(arr[i] * Math.sin(0.2f + i/5) * Math.cos(0.2f + i/5) * Math.cos(0.4f + i/2));
+                    arrBegin[i] = (float)(arrBegin[i] * Math.sin(0.2f + i/5) * Math.cos(0.2f + i/5) * Math.cos(0.4f + i/2));
                 }
                 System.out.println("Проверим, что процессы идут: " + arrBegin[200]);
             }
@@ -46,9 +49,9 @@ public class Main {
         Thread thread2 = new Thread(new Runnable() { //этот вторую
             @Override
             public void run() {
-                System.out.println("Привет! Я Поток2, начинаю вычисления.");
+               System.out.println("Привет! Я Поток2, начинаю вычисления.");
                 for (int i = 0; i < arrEnd.length; i++) {
-                    arrEnd[i] = (float)(arr[i] * Math.sin(0.2f + i/5) * Math.cos(0.2f + i/5) * Math.cos(0.4f + i/2));
+                    arrEnd[i] = (float)(arrEnd[i] * Math.sin(0.2f + (HALF + i)/5) * Math.cos(0.2f + (HALF + i)/5) * Math.cos(0.4f + (HALF + i)/2));
                 }
                 System.out.println("Проверим, что процессы идут: " + arrEnd[9000]);
             }
@@ -66,6 +69,7 @@ public class Main {
         System.arraycopy(arrBegin, 0, arr, 0, HALF); //склеиваем обратно точно готовые массивы
         System.arraycopy(arrEnd, 0, arr, HALF, HALF);
         System.out.println(thread1.getState() + " " + thread2.getState());
+        System.out.println("Последний кусок: " + arr[SIZE-1]);
             System.out.println(System.currentTimeMillis() - a + " - время работы второго метода");
         }
     }
