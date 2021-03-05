@@ -1,6 +1,6 @@
 package com.company.homework.homework13;
 import java.util.concurrent.CountDownLatch;
-//import java.util.concurrent.locks.ReentrantLock; не пригодился
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
@@ -9,7 +9,7 @@ public class Car implements Runnable {
     private String name;
     private CountDownLatch barrierStart;
     private CountDownLatch barrierFinish;
-    //private ReentrantLock win = new ReentrantLock();
+    private ReentrantLock lock = new ReentrantLock(); //повесим замок, чтобы только 1 поток за раз обращался к переменной
     private String[] marks;
     private String winner;
 
@@ -50,11 +50,16 @@ public class Car implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        try {
+            lock.lock();
             if (!race.isHaveWinner()){
                 race.setHaveWinner(true);
                 winner = this.getName();
                 System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> У НАС ЕСТЬ ПОБЕДИТЕЛЬ!!! " + winner);
-        }
+            }
+        }finally {
+                lock.unlock();
+            }
         barrierFinish.countDown();
     }
 }
